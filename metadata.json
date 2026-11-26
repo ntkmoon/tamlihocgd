@@ -1,0 +1,6 @@
+{
+  "name": "Lớp Học Chủ Nhiệm — Giả Lập Giáo Viên",
+  "description": "Tựa game giả lập làm giáo viên chủ nhiệm: xử lý các tình huống sư phạm thực tế trên bảng đen, theo dõi học lực, tính cách, tâm trạng và sự yêu thích của từng học sinh.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
