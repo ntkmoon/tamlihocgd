@@ -1,17 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
   AlertTriangle,
   Award,
   BookOpen,
   CalendarCheck,
-  Check,
-  Copy,
-  Download,
   History,
   Play,
   RotateCcw,
   ShieldAlert,
-  Upload,
   UserCheck,
 } from 'lucide-react';
 import {
@@ -42,7 +38,6 @@ interface TitleOverlayProps {
   savePreview?: SavePreviewInfo | null;
   onStart: (profile: TeacherProfile) => void;
   onResumeSaved?: () => void;
-  onImportSave?: (rawText: string) => boolean;
 }
 
 export const TitleOverlay: React.FC<TitleOverlayProps> = ({
@@ -50,14 +45,9 @@ export const TitleOverlay: React.FC<TitleOverlayProps> = ({
   savePreview,
   onStart,
   onResumeSaved,
-  onImportSave,
 }) => {
   const [gender, setGender] = useState<TeacherGender>(initialProfile.gender);
   const [rawName, setRawName] = useState<string>(initialProfile.rawName);
-  const [showImport, setShowImport] = useState(false);
-  const [importText, setImportText] = useState('');
-  const [importError, setImportError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const previewDisplayName = formatTeacherDisplayName(rawName, gender);
 
@@ -68,33 +58,6 @@ export const TitleOverlay: React.FC<TitleOverlayProps> = ({
       rawName: rawName.trim(),
       displayName: previewDisplayName,
     });
-  };
-
-  const handleImportSubmit = () => {
-    if (!onImportSave) return;
-    const ok = onImportSave(importText);
-    if (!ok) {
-      setImportError('Mã lưu hoặc nội dung file không hợp lệ.');
-    } else {
-      setImportError(null);
-    }
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !onImportSave) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const content = typeof reader.result === 'string' ? reader.result : '';
-      const ok = onImportSave(content);
-      if (!ok) {
-        setImportError('File lưu không đúng định dạng.');
-      } else {
-        setImportError(null);
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = '';
   };
 
   return (
@@ -264,66 +227,8 @@ export const TitleOverlay: React.FC<TitleOverlayProps> = ({
               </span>
             </button>
             <p className="text-xs text-stone-500 text-center">
-              Tiến trình tự lưu trên trình duyệt này (kể cả khi thoát tài khoản) · Click học sinh xem thông số
+              Tiến trình tự lưu trên trình duyệt này · Click học sinh xem thông số
             </p>
-
-            {onImportSave && (
-              <div className="w-full pt-1 flex flex-col items-center">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowImport((prev) => !prev);
-                    setImportError(null);
-                  }}
-                  className="text-xs font-semibold text-emerald-800 hover:text-emerald-950 underline underline-offset-2 cursor-pointer inline-flex items-center gap-1"
-                >
-                  <Upload className="w-3.5 h-3.5" />
-                  <span>Khôi phục tiến trình từ máy khác (Mã lưu / File .json)</span>
-                </button>
-
-                {showImport && (
-                  <div className="mt-2.5 w-full rounded-xl bg-stone-50 border border-stone-200 p-3 space-y-2 text-left">
-                    <textarea
-                      rows={2}
-                      value={importText}
-                      onChange={(e) => {
-                        setImportText(e.target.value);
-                        setImportError(null);
-                      }}
-                      placeholder="Dán mã lưu (LHCN2:...) hoặc nội dung JSON vào đây..."
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-stone-300 text-xs font-mono text-stone-800 focus:outline-none focus:border-emerald-600"
-                    />
-                    {importError && (
-                      <p className="text-xs font-semibold text-rose-600">{importError}</p>
-                    )}
-                    <div className="flex flex-wrap items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={handleImportSubmit}
-                        className="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold cursor-pointer"
-                      >
-                        Nạp mã lưu
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        className="px-3 py-1.5 rounded-lg bg-white border border-stone-300 hover:bg-stone-100 text-stone-800 text-xs font-semibold cursor-pointer inline-flex items-center gap-1"
-                      >
-                        <Upload className="w-3.5 h-3.5" />
-                        <span>Chọn file .json</span>
-                      </button>
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept=".json,.txt"
-                        onChange={handleFileChange}
-                        className="hidden"
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         </div>
       </form>
@@ -572,9 +477,6 @@ interface PauseModalProps {
   onResume: () => void;
   onRestart: () => void;
   onBackToTitle: () => void;
-  onDownloadSave: () => void;
-  onCopySaveCode: () => Promise<boolean>;
-  onImportSave: (rawText: string) => boolean;
 }
 
 export const PauseModal: React.FC<PauseModalProps> = ({
@@ -582,24 +484,7 @@ export const PauseModal: React.FC<PauseModalProps> = ({
   onResume,
   onRestart,
   onBackToTitle,
-  onDownloadSave,
-  onCopySaveCode,
-  onImportSave,
 }) => {
-  const [copied, setCopied] = useState(false);
-  const [showImport, setShowImport] = useState(false);
-  const [importText, setImportText] = useState('');
-  const [importError, setImportError] = useState<string | null>(null);
-  const fileRef = useRef<HTMLInputElement | null>(null);
-
-  const handleCopy = async () => {
-    const ok = await onCopySaveCode();
-    if (ok) {
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2200);
-    }
-  };
-
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/55"
@@ -612,101 +497,6 @@ export const PauseModal: React.FC<PauseModalProps> = ({
             Tạm dừng tiết học
           </h3>
           <p className="text-xs text-emerald-800 font-semibold mt-0.5">{teacherName}</p>
-        </div>
-
-        {/* Save & Portable Backup */}
-        <div className="rounded-xl bg-emerald-50/75 border border-emerald-200/80 p-3 space-y-2">
-          <div className="text-xs font-bold text-emerald-950">
-            Sao lưu &amp; Chuyển tiến trình sang máy khác
-          </div>
-          <p className="text-[11px] text-emerald-900/85 leading-relaxed">
-            Game tự động lưu trên trình duyệt này (không mất khi thoát tài khoản). Tải file hoặc sao chép mã để mang sang máy khác.
-          </p>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={onDownloadSave}
-              className="py-2 px-2.5 rounded-lg bg-white border border-emerald-300 hover:bg-emerald-100/60 text-emerald-900 text-xs font-semibold cursor-pointer inline-flex items-center justify-center gap-1.5"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>Tải file lưu</span>
-            </button>
-            <button
-              type="button"
-              onClick={handleCopy}
-              className="py-2 px-2.5 rounded-lg bg-white border border-emerald-300 hover:bg-emerald-100/60 text-emerald-900 text-xs font-semibold cursor-pointer inline-flex items-center justify-center gap-1.5"
-            >
-              {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-              <span>{copied ? 'Đã chép mã!' : 'Chép mã lưu'}</span>
-            </button>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => {
-              setShowImport((v) => !v);
-              setImportError(null);
-            }}
-            className="w-full py-1.5 rounded-lg text-[11px] font-semibold text-emerald-800 hover:bg-emerald-100/60 cursor-pointer inline-flex items-center justify-center gap-1"
-          >
-            <Upload className="w-3 h-3" />
-            <span>Nạp tiến trình từ mã lưu / file .json</span>
-          </button>
-
-          {showImport && (
-            <div className="space-y-1.5 pt-1">
-              <textarea
-                rows={2}
-                value={importText}
-                onChange={(e) => {
-                  setImportText(e.target.value);
-                  setImportError(null);
-                }}
-                placeholder="Dán mã LHCN2:... hoặc JSON..."
-                className="w-full px-2 py-1.5 rounded-lg bg-white border border-stone-300 text-[11px] font-mono text-stone-800 focus:outline-none focus:border-emerald-600"
-              />
-              {importError && <p className="text-[11px] font-semibold text-rose-600">{importError}</p>}
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (!onImportSave(importText)) {
-                      setImportError('Mã lưu không hợp lệ.');
-                    }
-                  }}
-                  className="flex-1 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold cursor-pointer"
-                >
-                  Khôi phục
-                </button>
-                <button
-                  type="button"
-                  onClick={() => fileRef.current?.click()}
-                  className="px-3 py-1.5 rounded-lg bg-white border border-stone-300 text-stone-800 text-xs font-semibold cursor-pointer"
-                >
-                  Chọn file
-                </button>
-                <input
-                  ref={fileRef}
-                  type="file"
-                  accept=".json,.txt"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (!file) return;
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                      const content = typeof reader.result === 'string' ? reader.result : '';
-                      if (!onImportSave(content)) {
-                        setImportError('File không hợp lệ.');
-                      }
-                    };
-                    reader.readAsText(file);
-                    e.target.value = '';
-                  }}
-                  className="hidden"
-                />
-              </div>
-            </div>
-          )}
         </div>
 
         <div className="text-xs text-stone-600 space-y-1.5 leading-relaxed bg-stone-50 rounded-xl p-3 border border-stone-200">

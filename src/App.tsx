@@ -68,8 +68,6 @@ import {
 import {
   applyChoicePermutation,
   clearGameFromStorage,
-  decodeSaveInput,
-  encodeSaveCode,
   getSavePreview,
   HydratedSaveState,
   loadGameFromStorage,
@@ -535,57 +533,6 @@ export default function App() {
     if (!saved) return;
     applyHydratedSave(saved);
   }, [applyHydratedSave, storedSave]);
-
-  const handleImportSave = useCallback(
-    (rawText: string): boolean => {
-      const decoded = decodeSaveInput(rawText);
-      if (!decoded) return false;
-      applyHydratedSave(decoded);
-      return true;
-    },
-    [applyHydratedSave]
-  );
-
-  const handleDownloadSave = useCallback(() => {
-    soundEngine.playClick();
-    const payload = buildCurrentSavePayload();
-    const json = JSON.stringify(payload, null, 2);
-    const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `lop-hoc-chu-nhiem-tuan-${payload.weekNumber}.json`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  }, [buildCurrentSavePayload]);
-
-  const handleCopySaveCode = useCallback(async (): Promise<boolean> => {
-    const code = encodeSaveCode(buildCurrentSavePayload());
-    try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(code);
-        return true;
-      }
-    } catch {
-      // Fallback below for restricted iframe contexts
-    }
-    try {
-      const textarea = document.createElement('textarea');
-      textarea.value = code;
-      textarea.setAttribute('readonly', '');
-      textarea.style.position = 'fixed';
-      textarea.style.opacity = '0';
-      document.body.appendChild(textarea);
-      textarea.select();
-      const copied = document.execCommand('copy');
-      document.body.removeChild(textarea);
-      return copied;
-    } catch {
-      return false;
-    }
-  }, [buildCurrentSavePayload]);
 
   const applyStatDeltas = useCallback(
     (
@@ -1380,7 +1327,6 @@ export default function App() {
           savePreview={savePreview}
           onStart={startNewGame}
           onResumeSaved={handleResumeSaved}
-          onImportSave={handleImportSave}
         />
       )}
 
@@ -1430,9 +1376,6 @@ export default function App() {
             soundEngine.playClick();
             setPhase('TITLE');
           }}
-          onDownloadSave={handleDownloadSave}
-          onCopySaveCode={handleCopySaveCode}
-          onImportSave={handleImportSave}
         />
       )}
 
