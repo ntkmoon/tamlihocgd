@@ -346,44 +346,44 @@ export const TransferAlertModal: React.FC<TransferAlertModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/60"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-stone-950/60"
       role="alertdialog"
       aria-modal="true"
     >
-      <div className="w-full max-w-md rounded-2xl bg-[#fffdf8] border-2 border-rose-500 shadow-2xl overflow-hidden">
-        <div className="bg-rose-700 px-5 py-4 text-white flex items-center gap-3">
+      <div className="w-full max-w-md max-h-[90vh] flex flex-col rounded-2xl bg-[#fffdf8] border-2 border-rose-500 shadow-2xl overflow-hidden">
+        <div className="bg-rose-700 px-5 py-4 text-white flex items-center gap-3 shrink-0">
           <AlertTriangle className="w-6 h-6 text-amber-300 shrink-0" />
           <div>
             <h3 className="text-lg font-bold" style={{ fontFamily: 'var(--font-display)' }}>
               Biên bản khiển trách từ Ban Giám Hiệu
             </h3>
             <p className="text-xs text-rose-100 tabular-nums">
-              Số lần bị khiển trách: {reprimands}/{MAX_REPRIMANDS}
+              Số lần bị khiển trách: {reprimands}/{MAX_REPRIMANDS} · Có {events.length} học sinh chuyển lớp
             </p>
           </div>
         </div>
 
-        <div className="p-5 space-y-4">
-          <div className="space-y-2">
-            {events.map((ev) => (
-              <div
-                key={ev.studentId}
-                className="rounded-xl bg-rose-50 border border-rose-200 p-3.5 text-sm text-rose-950"
-              >
-                <p className="font-bold">
-                  Học sinh {ev.studentName} đã xin chuyển lớp! (Tháng {ev.month} · Tuần {ev.week})
-                </p>
-                <p className="text-xs text-rose-800 mt-1 leading-relaxed">
-                  Chỉ số yêu thích với giáo viên tụt xuống còn{' '}
-                  <strong className="font-mono tabular-nums">
-                    {ev.finalAffection}/{MAX_STAT}
-                  </strong>{' '}
-                  (ngưỡng tối thiểu {TRANSFER_THRESHOLD}). Phụ huynh và học sinh mất niềm tin nên đã làm đơn chuyển lớp.
-                </p>
-              </div>
-            ))}
-          </div>
+        <div className="p-4 sm:p-5 space-y-2.5 overflow-y-auto flex-1 min-h-0">
+          {events.map((ev) => (
+            <div
+              key={ev.studentId}
+              className="rounded-xl bg-rose-50 border border-rose-200 p-3.5 text-sm text-rose-950"
+            >
+              <p className="font-bold">
+                Học sinh {ev.studentName} đã xin chuyển lớp! (Tháng {ev.month} · Tuần {ev.week})
+              </p>
+              <p className="text-xs text-rose-800 mt-1 leading-relaxed">
+                Chỉ số yêu thích với giáo viên tụt xuống còn{' '}
+                <strong className="font-mono tabular-nums">
+                  {ev.finalAffection}/{MAX_STAT}
+                </strong>{' '}
+                (ngưỡng tối thiểu {TRANSFER_THRESHOLD}). Phụ huynh và học sinh mất niềm tin nên đã làm đơn chuyển lớp.
+              </p>
+            </div>
+          ))}
+        </div>
 
+        <div className="px-4 sm:px-5 pb-4 sm:pb-5 pt-3 border-t border-rose-200/80 bg-[#fffdf8] space-y-3 shrink-0">
           <p className="text-xs text-stone-600 leading-relaxed">
             {reprimands >= MAX_REPRIMANDS
               ? 'Bạn đã chạm giới hạn 3 lần bị khiển trách trong năm học.'
@@ -395,7 +395,7 @@ export const TransferAlertModal: React.FC<TransferAlertModalProps> = ({
             onClick={onAcknowledge}
             className="w-full py-3 min-h-[44px] rounded-xl bg-rose-700 hover:bg-rose-600 text-white font-bold text-sm transition-colors cursor-pointer"
           >
-            {reprimands >= MAX_REPRIMANDS ? 'Xem quyết định kỷ luật' : 'Tiếp thu và tiếp tục'}
+            {reprimands >= MAX_REPRIMANDS ? 'Xem quyết định kỷ luật & Bắt đầu lại' : 'Tiếp thu và tiếp tục'}
           </button>
         </div>
       </div>
@@ -446,12 +446,12 @@ export const MonthSummaryModal: React.FC<MonthSummaryModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/55"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-stone-950/55"
       role="dialog"
       aria-modal="true"
     >
-      <div className="w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-2xl bg-[#fffdf8] border border-stone-200 shadow-2xl">
-        <div className="bg-emerald-900 px-5 py-4 text-white flex items-center gap-3">
+      <div className="w-full max-w-lg max-h-[92vh] flex flex-col rounded-2xl bg-[#fffdf8] border border-stone-200 shadow-2xl overflow-hidden">
+        <div className="bg-emerald-900 px-5 py-4 text-white flex items-center gap-3 shrink-0">
           <CalendarCheck className="w-6 h-6 text-amber-300 shrink-0" />
           <div className="min-w-0">
             <h3 className="text-lg font-bold" style={{ fontFamily: 'var(--font-display)' }}>
@@ -464,7 +464,7 @@ export const MonthSummaryModal: React.FC<MonthSummaryModalProps> = ({
           </div>
         </div>
 
-        <div className="p-5 space-y-4">
+        <div className="p-4 sm:p-5 space-y-4 overflow-y-auto flex-1 min-h-0">
           <div className="rounded-xl bg-emerald-50/75 border border-emerald-200/80 px-3.5 py-2.5 text-xs text-emerald-950 space-y-1">
             <div className="font-bold">{weekInfo.monthTheme}</div>
             <div className="text-emerald-800 tabular-nums">
@@ -549,6 +549,9 @@ export const MonthSummaryModal: React.FC<MonthSummaryModalProps> = ({
             </div>
           )}
 
+        </div>
+
+        <div className="px-4 sm:px-5 pb-4 sm:pb-5 pt-3 border-t border-stone-200 bg-[#fffdf8] shrink-0">
           <button
             type="button"
             onClick={onNextMonth}
@@ -780,13 +783,13 @@ export const EndGameModal: React.FC<EndGameModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/65"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-stone-950/65"
       role="dialog"
       aria-modal="true"
     >
-      <div className="w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-2xl bg-[#fffdf8] border border-stone-200 shadow-2xl">
+      <div className="w-full max-w-lg max-h-[92vh] flex flex-col rounded-2xl bg-[#fffdf8] border border-stone-200 shadow-2xl overflow-hidden">
         <div
-          className={`px-6 py-5 text-white text-center ${
+          className={`px-6 py-4 sm:py-5 text-white text-center shrink-0 ${
             isVictory ? 'bg-emerald-800' : 'bg-rose-800'
           }`}
         >
@@ -807,7 +810,7 @@ export const EndGameModal: React.FC<EndGameModalProps> = ({
           </p>
         </div>
 
-        <div className="p-5 space-y-4">
+        <div className="p-4 sm:p-5 space-y-4 overflow-y-auto flex-1 min-h-0">
           <div className="grid grid-cols-2 gap-2.5 text-sm">
             <div className="rounded-xl bg-stone-50 border border-stone-200 p-3">
               <div className="text-xs text-stone-500">Tiến độ năm học</div>
@@ -856,6 +859,9 @@ export const EndGameModal: React.FC<EndGameModalProps> = ({
             </div>
           </div>
 
+        </div>
+
+        <div className="px-4 sm:px-5 pb-4 sm:pb-5 pt-3 border-t border-stone-200 bg-[#fffdf8] shrink-0">
           <button
             type="button"
             onClick={onRestart}

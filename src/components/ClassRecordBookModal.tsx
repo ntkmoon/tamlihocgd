@@ -38,9 +38,9 @@ export const ClassRecordBookModal: React.FC<ClassRecordBookModalProps> = ({
       aria-modal="true"
       aria-labelledby="record-book-title"
     >
-      <div className="w-full max-w-xl max-h-[92vh] overflow-y-auto rounded-2xl bg-[#fdfaf0] border-2 border-amber-900/30 shadow-2xl">
+      <div className="w-full max-w-xl max-h-[92vh] flex flex-col rounded-2xl bg-[#fdfaf0] border-2 border-amber-900/30 shadow-2xl overflow-hidden">
         {/* Authentic Ledger Header */}
-        <div className="bg-[#7c2d12] px-5 py-4 text-amber-50 border-b-4 border-amber-400/70">
+        <div className="bg-[#7c2d12] px-5 py-4 text-amber-50 border-b-4 border-amber-400/70 shrink-0">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-amber-400/20 border border-amber-300/40 flex items-center justify-center shrink-0">
@@ -63,7 +63,7 @@ export const ClassRecordBookModal: React.FC<ClassRecordBookModalProps> = ({
         </div>
 
         {/* Ledger Content */}
-        <div className="p-5 space-y-4">
+        <div className="p-4 sm:p-5 space-y-4 overflow-y-auto flex-1 min-h-0">
           {/* Month theme & holiday */}
           <div className="rounded-xl bg-amber-50/90 border border-amber-200/80 px-3.5 py-2.5 text-xs space-y-1">
             <div className="font-bold text-amber-950">{weekInfo.monthTheme}</div>
@@ -148,6 +148,9 @@ export const ClassRecordBookModal: React.FC<ClassRecordBookModalProps> = ({
             </span>
           </div>
 
+        </div>
+
+        <div className="px-4 sm:px-5 pb-4 sm:pb-5 pt-3 border-t border-amber-900/15 bg-[#fdfaf0] shrink-0">
           <button
             type="button"
             onClick={onStartWeek}

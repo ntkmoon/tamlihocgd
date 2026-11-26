@@ -76,11 +76,11 @@ export const StudentDetailModal: React.FC<StudentDetailModalProps> = ({ student,
       aria-labelledby="student-profile-title"
     >
       <div
-        className="w-full max-w-md rounded-2xl bg-[#fffdf8] border border-stone-200 shadow-2xl overflow-hidden"
+        className="w-full max-w-md max-h-[90vh] flex flex-col rounded-2xl bg-[#fffdf8] border border-stone-200 shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 px-5 py-4 bg-emerald-900 text-white">
+        <div className="flex items-start justify-between gap-3 px-5 py-4 bg-emerald-900 text-white shrink-0">
           <div className="flex items-center gap-3 min-w-0">
             <div
               className="w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold text-white shadow-inner shrink-0 border border-white/25"
@@ -123,7 +123,7 @@ export const StudentDetailModal: React.FC<StudentDetailModalProps> = ({ student,
         </div>
 
         {/* Body */}
-        <div className="p-5 space-y-4">
+        <div className="p-5 space-y-4 overflow-y-auto flex-1 min-h-0">
           {isTransferred ? (
             <div className="rounded-xl bg-stone-100 border border-stone-200 p-3 text-sm text-stone-700 flex items-start gap-2.5">
               <AlertTriangle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
