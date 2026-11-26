@@ -1142,12 +1142,12 @@ export default function App() {
               {teacherProfile.displayName}
             </span>
             <span aria-hidden="true" className="hidden sm:inline text-white/30">·</span>
-            <span className="font-mono text-[11px] sm:text-xs font-semibold tabular-nums text-emerald-200 whitespace-nowrap">
+            <span className="text-[11px] sm:text-xs font-semibold tabular-nums text-emerald-200 whitespace-nowrap">
               Tháng {weekInfo.month} (T{weekInfo.weekInMonth}/4) · Tuần {weekNumber}/{TOTAL_ACADEMIC_WEEKS}
             </span>
             <span aria-hidden="true" className="hidden md:inline text-white/30">·</span>
             <div
-              className={`inline-flex items-center gap-1 text-[11px] sm:text-xs font-semibold font-mono tabular-nums whitespace-nowrap ${
+              className={`inline-flex items-center gap-1 text-[11px] sm:text-xs font-semibold tabular-nums whitespace-nowrap ${
                 reprimands > 0 ? 'text-rose-300' : 'text-emerald-200/90'
               }`}
               title="Số lần bị khiển trách do học sinh chuyển lớp"
@@ -1164,7 +1164,7 @@ export default function App() {
           </div>
 
           {/* Center: Live Class Averages (inline on extra-wide screens) */}
-          <div className="hidden 2xl:flex items-center gap-3 text-xs font-medium text-emerald-100/90 font-mono tabular-nums whitespace-nowrap shrink-0">
+          <div className="hidden 2xl:flex items-center gap-3 text-xs font-medium text-emerald-100/90 tabular-nums whitespace-nowrap shrink-0">
             <span className="inline-flex items-center gap-1.5">
               <Users className="w-3.5 h-3.5 text-amber-300" />
               Sĩ số: {activeStudents.length}/{students.length}
@@ -1226,7 +1226,7 @@ export default function App() {
         </div>
 
         {/* Compact secondary stats strip for phones, tablets, and laptops (< 2xl) */}
-        <div className="flex 2xl:hidden flex-wrap items-center gap-x-3 gap-y-0.5 pt-1.5 mt-1.5 border-t border-white/10 text-[11px] sm:text-xs font-medium text-emerald-100/85 font-mono tabular-nums">
+        <div className="flex 2xl:hidden flex-wrap items-center gap-x-3 gap-y-0.5 pt-1.5 mt-1.5 border-t border-white/10 text-[11px] sm:text-xs font-medium text-emerald-100/85 tabular-nums">
           <span className="inline-flex items-center gap-1 whitespace-nowrap">
             <Users className="w-3.5 h-3.5 text-amber-300 shrink-0" />
             Sĩ số: {activeStudents.length}/{students.length}
