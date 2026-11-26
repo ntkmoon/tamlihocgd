@@ -1127,100 +1127,114 @@ export default function App() {
   return (
     <div className="min-h-screen w-full flex flex-col classroom-floor select-none overflow-x-hidden">
       {/* Compact Top Classroom HUD */}
-      <header className="w-full bg-[#243d32] text-amber-50 border-b-2 border-[#162720] px-3 sm:px-6 py-2 flex items-center justify-between gap-3 z-20">
-        {/* Left: Teacher, Academic Month/Week & Reprimands */}
-        <div className="flex items-center flex-wrap gap-x-3 sm:gap-x-4 gap-y-1 min-w-0">
-          <div className="flex items-center gap-2 whitespace-nowrap">
+      <header className="w-full bg-[#243d32] text-amber-50 border-b-2 border-[#162720] px-3 sm:px-5 lg:px-6 py-2 z-20">
+        <div className="w-full flex items-center justify-between gap-2 sm:gap-3 min-w-0">
+          {/* Left: Brand, Teacher, Academic Month/Week & Reprimands */}
+          <div className="flex items-center flex-wrap gap-x-2.5 sm:gap-x-3 gap-y-1 min-w-0 flex-1">
             <span
-              className="text-sm sm:text-base font-bold text-amber-200 tracking-tight"
+              className="text-sm sm:text-base font-bold text-amber-200 tracking-tight whitespace-nowrap"
               style={{ fontFamily: 'var(--font-display)' }}
             >
               Lớp Học Chủ Nhiệm
             </span>
-            <span aria-hidden="true" className="text-white/30">·</span>
-            <span className="text-xs sm:text-sm font-semibold text-amber-100">
+            <span aria-hidden="true" className="hidden sm:inline text-white/30">·</span>
+            <span className="text-xs sm:text-sm font-semibold text-amber-100 truncate max-w-[140px] sm:max-w-[200px]">
               {teacherProfile.displayName}
             </span>
-            <span aria-hidden="true" className="text-white/30">·</span>
-            <span className="font-mono text-xs sm:text-sm font-semibold tabular-nums text-emerald-200">
+            <span aria-hidden="true" className="hidden sm:inline text-white/30">·</span>
+            <span className="font-mono text-[11px] sm:text-xs font-semibold tabular-nums text-emerald-200 whitespace-nowrap">
               Tháng {weekInfo.month} (T{weekInfo.weekInMonth}/4) · Tuần {weekNumber}/{TOTAL_ACADEMIC_WEEKS}
             </span>
+            <span aria-hidden="true" className="hidden md:inline text-white/30">·</span>
+            <div
+              className={`inline-flex items-center gap-1 text-[11px] sm:text-xs font-semibold font-mono tabular-nums whitespace-nowrap ${
+                reprimands > 0 ? 'text-rose-300' : 'text-emerald-200/90'
+              }`}
+              title="Số lần bị khiển trách do học sinh chuyển lớp"
+            >
+              <AlertTriangle
+                className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${
+                  reprimands > 0 ? 'text-rose-400' : 'text-emerald-300/70'
+                }`}
+              />
+              <span>
+                Khiển trách: {reprimands}/{MAX_REPRIMANDS}
+              </span>
+            </div>
           </div>
 
-          <div
-            className={`flex items-center gap-1.5 text-xs sm:text-sm font-semibold font-mono tabular-nums whitespace-nowrap ${
-              reprimands > 0 ? 'text-rose-300' : 'text-emerald-200/90'
-            }`}
-            title="Số lần bị khiển trách do học sinh chuyển lớp"
-          >
-            <AlertTriangle
-              className={`w-4 h-4 shrink-0 ${
-                reprimands > 0 ? 'text-rose-400' : 'text-emerald-300/70'
-              }`}
-            />
-            <span>
-              Khiển trách: {reprimands}/{MAX_REPRIMANDS}
+          {/* Center: Live Class Averages (inline on extra-wide screens) */}
+          <div className="hidden 2xl:flex items-center gap-3 text-xs font-medium text-emerald-100/90 font-mono tabular-nums whitespace-nowrap shrink-0">
+            <span className="inline-flex items-center gap-1.5">
+              <Users className="w-3.5 h-3.5 text-amber-300" />
+              Sĩ số: {activeStudents.length}/{students.length}
             </span>
+            <span aria-hidden="true" className="text-white/30">·</span>
+            <span>Học lực TB: {avgAcademic}/{MAX_STAT}</span>
+            <span aria-hidden="true" className="text-white/30">·</span>
+            <span>Yêu thích TB: {avgAffection}/{MAX_STAT}</span>
+          </div>
+
+          {/* Right: Staff Route, Audio & Pause Controls (always visible) */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 self-start sm:self-center">
+            <button
+              type="button"
+              onClick={() => handleOpenStaffRoster()}
+              title={`Xem từng Đồng nghiệp & Ban Giám Hiệu (Tổng yêu quý: ${totalStaffAffection.toLocaleString('vi-VN')}/${staffMaxTotal.toLocaleString('vi-VN')})`}
+              className="h-8 sm:h-9 px-2 sm:px-3 rounded-lg bg-white/10 hover:bg-white/20 flex items-center gap-1.5 text-xs font-semibold text-amber-200 transition-colors cursor-pointer"
+            >
+              <Briefcase className="w-4 h-4 shrink-0" />
+              <span className="hidden md:inline whitespace-nowrap">Đồng nghiệp &amp; BGH</span>
+              <span className="inline-flex items-center gap-1 font-mono tabular-nums text-rose-200 pl-0.5">
+                <Heart className="w-3.5 h-3.5 fill-current" />
+                {totalStaffAffection.toLocaleString('vi-VN')}
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={handleToggleMute}
+              aria-label={muted ? 'Bật âm thanh' : 'Tắt âm thanh'}
+              title={muted ? 'Bật âm thanh' : 'Tắt âm thanh'}
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer shrink-0"
+            >
+              {muted ? (
+                <VolumeX className="w-4 h-4 text-rose-300" />
+              ) : (
+                <Volume2 className="w-4 h-4 text-amber-200" />
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                soundEngine.playClick();
+                if (
+                  phase === 'PLAYING' ||
+                  phase === 'FEEDBACK' ||
+                  phase === 'CLASS_RECORD_BOOK'
+                ) {
+                  setPauseReturnPhase(phase);
+                  setPhase('PAUSED');
+                }
+              }}
+              aria-label="Tạm dừng"
+              title="Tạm dừng (Esc)"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer shrink-0"
+            >
+              <Pause className="w-4 h-4 text-amber-200" />
+            </button>
           </div>
         </div>
 
-        {/* Center: Live Class Averages (1000-point scale) */}
-        <div className="hidden xl:flex items-center gap-4 text-xs font-medium text-emerald-100/90 font-mono tabular-nums whitespace-nowrap">
-          <span className="inline-flex items-center gap-1.5">
-            <Users className="w-3.5 h-3.5 text-amber-300" />
+        {/* Compact secondary stats strip for phones, tablets, and laptops (< 2xl) */}
+        <div className="flex 2xl:hidden flex-wrap items-center gap-x-3 gap-y-0.5 pt-1.5 mt-1.5 border-t border-white/10 text-[11px] sm:text-xs font-medium text-emerald-100/85 font-mono tabular-nums">
+          <span className="inline-flex items-center gap-1 whitespace-nowrap">
+            <Users className="w-3.5 h-3.5 text-amber-300 shrink-0" />
             Sĩ số: {activeStudents.length}/{students.length}
           </span>
-          <span aria-hidden="true" className="text-white/30">·</span>
-          <span>Học lực TB: {avgAcademic}/{MAX_STAT}</span>
-          <span aria-hidden="true" className="text-white/30">·</span>
-          <span>Yêu thích TB: {avgAffection}/{MAX_STAT}</span>
-        </div>
-
-        {/* Right: Staff Route, Audio & Pause Controls */}
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            type="button"
-            onClick={() => handleOpenStaffRoster()}
-            title={`Xem từng Đồng nghiệp & Ban Giám Hiệu (Tổng yêu quý: ${totalStaffAffection.toLocaleString('vi-VN')}/${staffMaxTotal.toLocaleString('vi-VN')})`}
-            className="h-9 px-2.5 sm:px-3 rounded-lg bg-white/10 hover:bg-white/20 flex items-center gap-1.5 text-xs font-semibold text-amber-200 transition-colors cursor-pointer"
-          >
-            <Briefcase className="w-4 h-4 shrink-0" />
-            <span className="hidden sm:inline">Đồng nghiệp &amp; BGH</span>
-            <span className="inline-flex items-center gap-1 font-mono tabular-nums text-rose-200 pl-0.5">
-              <Heart className="w-3.5 h-3.5 fill-current" />
-              {totalStaffAffection.toLocaleString('vi-VN')}
-            </span>
-          </button>
-          <button
-            type="button"
-            onClick={handleToggleMute}
-            aria-label={muted ? 'Bật âm thanh' : 'Tắt âm thanh'}
-            className="w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer"
-          >
-            {muted ? (
-              <VolumeX className="w-4 h-4 text-rose-300" />
-            ) : (
-              <Volume2 className="w-4 h-4 text-amber-200" />
-            )}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              soundEngine.playClick();
-              if (
-                phase === 'PLAYING' ||
-                phase === 'FEEDBACK' ||
-                phase === 'CLASS_RECORD_BOOK'
-              ) {
-                setPauseReturnPhase(phase);
-                setPhase('PAUSED');
-              }
-            }}
-            aria-label="Tạm dừng"
-            className="w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer"
-          >
-            <Pause className="w-4 h-4 text-amber-200" />
-          </button>
+          <span aria-hidden="true" className="text-white/25">·</span>
+          <span className="whitespace-nowrap">Học lực TB: {avgAcademic}/{MAX_STAT}</span>
+          <span aria-hidden="true" className="text-white/25">·</span>
+          <span className="whitespace-nowrap">Yêu thích TB: {avgAffection}/{MAX_STAT}</span>
         </div>
       </header>
 
