@@ -61,24 +61,10 @@ export const TeacherAvatar: React.FC<TeacherAvatarProps> = ({
 
         {gender === 'female' ? (
           <>
-            {/* Traditional long Vietnamese dark hair flowing softly behind shoulders */}
+            {/* Traditional Vietnamese hair flowing seamlessly behind ears and neck */}
             <path
-              d="M 41 37 Q 35 64 39 97 Q 65 103 91 97 Q 95 64 89 37 Z"
+              d="M 41.5 38 C 41.5 11.5 88.5 11.5 88.5 38 C 90.5 50 89.5 61 85 70 L 45 70 C 40.5 61 39.5 50 41.5 38 Z"
               fill="#271812"
-            />
-            <path
-              d="M 42 58 Q 40 78 44 93"
-              stroke="#3b251c"
-              strokeWidth="1.5"
-              fill="none"
-              opacity="0.7"
-            />
-            <path
-              d="M 88 58 Q 90 78 86 93"
-              stroke="#3b251c"
-              strokeWidth="1.5"
-              fill="none"
-              opacity="0.7"
             />
 
             {/* Neat black low-heel shoes */}
@@ -192,15 +178,13 @@ export const TeacherAvatar: React.FC<TeacherAvatarProps> = ({
               strokeWidth="1.2"
             />
 
-            {/* Neat Vietnamese half-up parted hair with delicate pearl hairpin */}
+            {/* Seamless side-parted crown & soft forehead bangs with pearl hairpin */}
             <path
-              d="M 43.5 40 C 42 12 88 12 86.5 40 C 83.5 32 76 29.5 67 31.5 C 61 32.8 56 28.5 52 29.5 C 47.5 31 45 35 43.5 40 Z"
+              d="M 41.5 38 C 41.5 11.5 88.5 11.5 88.5 38 L 85 38 C 82 32 71 31 56 28 C 49 30 46 33 45 38 Z"
               fill="#271812"
             />
-            <path d="M 45.5 36 Q 43.5 47 46 56" stroke="#271812" strokeWidth="3.8" strokeLinecap="round" fill="none" />
-            <path d="M 84.5 36 Q 86.5 47 84 56" stroke="#271812" strokeWidth="3.8" strokeLinecap="round" fill="none" />
             {/* Small pearl hairpin */}
-            <circle cx="77" cy="30" r="1.8" fill="#fef9c3" stroke="#d97706" strokeWidth="0.5" />
+            <circle cx="78" cy="28.5" r="1.8" fill="#fef9c3" stroke="#d97706" strokeWidth="0.5" />
 
             {/* Soft rosy cheeks */}
             <ellipse cx="52.5" cy="48.5" rx="3.2" ry="1.6" fill="#fda4af" opacity="0.36" />
